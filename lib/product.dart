@@ -4,7 +4,7 @@ class Product {
   String imagePach;
 
   String title;
-  String price;
+  double price;
   Product({
     required this.id,
     required this.imagePach,

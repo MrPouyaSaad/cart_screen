@@ -1,6 +1,8 @@
-import 'package:cart_screen/product.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cart_screen/product.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -15,17 +17,17 @@ class _CartScreenState extends State<CartScreen> {
         id: 1,
         imagePach: 'assets/images/Item_1.png',
         title: 'Item 1',
-        price: '\$1,500'),
+        price: 1500),
     Product(
         id: 2,
         imagePach: 'assets/images/Item_2.png',
         title: 'Item 2',
-        price: '\$2,500'),
+        price: 2500),
     Product(
         id: 3,
         imagePach: 'assets/images/Item_3.png',
         title: 'Item 3',
-        price: '\$3,500'),
+        price: 3500),
   ];
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,9 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       backgroundColor: Colors.blueGrey[50],
       appBar: myAppBar(themeData),
-      bottomNavigationBar: const MyBottomNavigationBar(),
+      bottomNavigationBar: MyBottomNavigationBar(
+        products: products,
+      ),
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         itemCount: products.length,
@@ -46,17 +50,33 @@ class _CartScreenState extends State<CartScreen> {
   }
 }
 
-class MyBottomNavigationBar extends StatelessWidget {
+class MyBottomNavigationBar extends StatefulWidget {
   const MyBottomNavigationBar({
-    super.key,
-  });
+    Key? key,
+    required this.products,
+  }) : super(key: key);
+  final List<Product> products;
+
+  @override
+  State<MyBottomNavigationBar> createState() => _MyBottomNavigationBarState();
+}
+
+class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
+  totalPrice() {
+    double total = 0;
+    for (var i = 0; i < widget.products.length; i++) {
+      total += widget.products[i].price;
+    }
+    return total;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 92,
+      height: 132,
       padding: const EdgeInsets.symmetric(
         horizontal: 24,
+        vertical: 16,
       ),
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -71,42 +91,64 @@ class MyBottomNavigationBar extends StatelessWidget {
           )
         ],
       ),
-      child: Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text.rich(
-            TextSpan(
-              text: 'Total\n',
-              children: [
+          Row(
+            children: [
+              Icon(
+                Icons.local_offer_outlined,
+                color: Colors.indigo.shade900,
+              ),
+              const Spacer(),
+              const Text(
+                'Add Vocher Code',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              const Icon(CupertinoIcons.forward),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text.rich(
                 TextSpan(
-                  text: '\$7,500',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                  text: 'Total\n',
+                  children: [
+                    TextSpan(
+                      text: '\$${totalPrice()}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Directionality(
+                textDirection: TextDirection.rtl,
+                child: ElevatedButton.icon(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    alignment: Alignment.center,
+                    backgroundColor: Colors.orangeAccent[400],
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 48, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                  ),
+                  icon: const Icon(CupertinoIcons.back),
+                  label: const Text(
+                    'Next',
                   ),
                 ),
-              ],
-            ),
-          ),
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: ElevatedButton.icon(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                alignment: Alignment.center,
-                backgroundColor: Colors.orangeAccent[400],
-                foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16.0),
-                ),
               ),
-              icon: const Icon(CupertinoIcons.back),
-              label: const Text(
-                'Next',
-              ),
-            ),
+            ],
           ),
         ],
       ),
@@ -174,7 +216,7 @@ class CartItem extends StatelessWidget {
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 children: [
                   TextSpan(
-                    text: product.price,
+                    text: product.price.toString(),
                     style: const TextStyle(fontSize: 12),
                   ),
                 ],
