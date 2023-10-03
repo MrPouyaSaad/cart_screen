@@ -79,8 +79,9 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 132,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      height: widget.products.isNotEmpty ? 132 : 0,
       padding: const EdgeInsets.symmetric(
         horizontal: 24,
         vertical: 16,
