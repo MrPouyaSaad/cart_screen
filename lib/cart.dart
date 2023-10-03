@@ -176,9 +176,52 @@ class CartItem extends StatelessWidget {
                   TextSpan(
                     text: product.price,
                     style: const TextStyle(fontSize: 12),
-                  )
+                  ),
                 ],
               ),
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                IconButton.outlined(
+                  onPressed: () {},
+                  iconSize: 18,
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.all(0),
+                    //  foregroundColor: themeData.colorScheme.primary,
+                    minimumSize: const Size(28, 28),
+                    maximumSize: const Size(28, 28),
+                    side: BorderSide(
+                      color: Colors.indigo.shade900,
+                      width: 1.5,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadiusDirectional.circular(6),
+                    ),
+                  ),
+                  icon: Icon(
+                    CupertinoIcons.minus,
+                    color: Colors.indigo.shade900,
+                  ),
+                ),
+                const Text('x5'),
+                IconButton.filled(
+                  onPressed: () {},
+                  iconSize: 18,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.indigo.shade900,
+                    padding: const EdgeInsets.all(0),
+                    minimumSize: const Size(28, 28),
+                    maximumSize: const Size(28, 28),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadiusDirectional.circular(6),
+                    ),
+                  ),
+                  icon: const Icon(
+                    CupertinoIcons.add,
+                  ),
+                ),
+              ],
             )
           ],
         ),
