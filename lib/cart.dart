@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cart_screen/product.dart';
+import 'package:get/get.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -34,25 +35,41 @@ class _CartScreenState extends State<CartScreen> {
     ThemeData themeData = Theme.of(context);
     return Scaffold(
       backgroundColor: Colors.blueGrey[50],
-      appBar: myAppBar(themeData),
+      appBar: myAppBar(themeData, products.length),
       bottomNavigationBar: MyBottomNavigationBar(
         products: products,
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          final product = products[index];
-          return CartItem(
-            product: product,
-            onDismiss: (p0) {
-              setState(() {
-                products.removeAt(index);
-              });
-            },
-          );
-        },
-      ),
+      body: products.isNotEmpty
+          ? ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                final product = products[index];
+                return CartItem(
+                  product: product,
+                  onDismiss: (p0) {
+                    setState(() {
+                      products.removeAt(index);
+                    });
+                  },
+                );
+              },
+            )
+          : Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/empty_cart.png',
+                    width: 168,
+                  ).marginOnly(bottom: 16),
+                  const Text(
+                    'Cart is empty !',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 }
@@ -99,67 +116,69 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
           )
         ],
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.local_offer_outlined,
-                color: Colors.indigo.shade900,
-              ),
-              const Spacer(),
-              const Text(
-                'Add Vocher Code',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                width: 16,
-              ),
-              const Icon(CupertinoIcons.forward),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text.rich(
-                TextSpan(
-                  text: 'Total\n',
+      child: widget.products.isNotEmpty
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
                   children: [
-                    TextSpan(
-                      text: '\$${totalPrice()}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                    Icon(
+                      Icons.local_offer_outlined,
+                      color: Colors.indigo.shade900,
+                    ),
+                    const Spacer(),
+                    const Text(
+                      'Add Vocher Code',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    const Icon(CupertinoIcons.forward),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text.rich(
+                      TextSpan(
+                        text: 'Total\n',
+                        children: [
+                          TextSpan(
+                            text: '\$${totalPrice()}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: ElevatedButton.icon(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          alignment: Alignment.center,
+                          backgroundColor: Colors.orangeAccent[400],
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 48, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                          ),
+                        ),
+                        icon: const Icon(CupertinoIcons.back),
+                        label: const Text(
+                          'Next',
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: ElevatedButton.icon(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    alignment: Alignment.center,
-                    backgroundColor: Colors.orangeAccent[400],
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 48, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.0),
-                    ),
-                  ),
-                  icon: const Icon(CupertinoIcons.back),
-                  label: const Text(
-                    'Next',
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+              ],
+            )
+          : null,
     );
   }
 }
@@ -282,7 +301,7 @@ class CartItem extends StatelessWidget {
   }
 }
 
-AppBar myAppBar(ThemeData themeData) {
+AppBar myAppBar(ThemeData themeData, int count) {
   return AppBar(
     centerTitle: true,
     backgroundColor: Colors.blueGrey[50],
@@ -290,7 +309,7 @@ AppBar myAppBar(ThemeData themeData) {
       children: [
         const Text('My Cart'),
         Text(
-          '3 Items',
+          '$count Items',
           style: themeData.textTheme.bodySmall,
         ),
       ],
