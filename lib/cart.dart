@@ -43,7 +43,14 @@ class _CartScreenState extends State<CartScreen> {
         itemCount: products.length,
         itemBuilder: (context, index) {
           final product = products[index];
-          return CartItem(product: product);
+          return CartItem(
+            product: product,
+            onDismiss: (p0) {
+              setState(() {
+                products.removeAt(index);
+              });
+            },
+          );
         },
       ),
     );
@@ -158,16 +165,18 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
 
 class CartItem extends StatelessWidget {
   const CartItem({
-    super.key,
+    Key? key,
     required this.product,
-  });
+    required this.onDismiss,
+  }) : super(key: key);
 
   final Product product;
-
+  final Function(DismissDirection) onDismiss;
   @override
   Widget build(BuildContext context) {
     return Dismissible(
       key: Key(product.id.toString()),
+      onDismissed: onDismiss,
       direction: DismissDirection.endToStart,
       background: Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
