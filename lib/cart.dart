@@ -31,72 +31,84 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
     return Scaffold(
+      backgroundColor: Colors.blueGrey[50],
       appBar: myAppBar(themeData),
-      bottomNavigationBar: Container(
-        height: 92,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 24,
-        ),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black45,
-              blurRadius: 12.0,
-            )
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text.rich(
-              TextSpan(
-                text: 'Total\n',
-                children: [
-                  TextSpan(
-                    text: '\$7,500',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: ElevatedButton.icon(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  alignment: Alignment.center,
-                  backgroundColor: Colors.orangeAccent[400],
-                  foregroundColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.0),
-                  ),
-                ),
-                icon: const Icon(CupertinoIcons.back),
-                label: const Text(
-                  'Next',
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      bottomNavigationBar: const MyBottomNavigationBar(),
       body: ListView.builder(
-        padding: const EdgeInsets.only(top: 16, bottom: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         itemCount: products.length,
         itemBuilder: (context, index) {
           final product = products[index];
           return CartItem(product: product);
         },
+      ),
+    );
+  }
+}
+
+class MyBottomNavigationBar extends StatelessWidget {
+  const MyBottomNavigationBar({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 92,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 24,
+      ),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(30.0),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black45,
+            blurRadius: 12.0,
+          )
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text.rich(
+            TextSpan(
+              text: 'Total\n',
+              children: [
+                TextSpan(
+                  text: '\$7,500',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Directionality(
+            textDirection: TextDirection.rtl,
+            child: ElevatedButton.icon(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                alignment: Alignment.center,
+                backgroundColor: Colors.orangeAccent[400],
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+              ),
+              icon: const Icon(CupertinoIcons.back),
+              label: const Text(
+                'Next',
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -112,42 +124,64 @@ class CartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.0),
-        color: Colors.white,
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 9,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Image.asset(
-            product.imagePach,
-            height: 48,
-          ),
-          const SizedBox(
-            width: 32,
-          ),
-          Text.rich(
-            TextSpan(
-              text: '${product.title} \n',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              children: [
-                TextSpan(
-                  text: product.price,
-                  style: const TextStyle(fontSize: 12),
-                )
-              ],
+    return Dismissible(
+      key: Key(product.id.toString()),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        decoration: const BoxDecoration(
+          color: Color(0xffFFE6E6),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
             ),
-          )
-        ],
+          ],
+        ),
+        alignment: Alignment.centerRight,
+        child: const Icon(
+          CupertinoIcons.delete,
+          color: Colors.red,
+        ),
+      ),
+      child: Container(
+        width: double.infinity,
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Image.asset(
+              product.imagePach,
+              height: 48,
+            ),
+            const SizedBox(
+              width: 32,
+            ),
+            Text.rich(
+              TextSpan(
+                text: '${product.title} \n',
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                    text: product.price,
+                    style: const TextStyle(fontSize: 12),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -156,6 +190,7 @@ class CartItem extends StatelessWidget {
 AppBar myAppBar(ThemeData themeData) {
   return AppBar(
     centerTitle: true,
+    backgroundColor: Colors.blueGrey[50],
     title: Column(
       children: [
         const Text('My Cart'),
